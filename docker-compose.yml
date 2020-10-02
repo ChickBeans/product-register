@@ -1,0 +1,37 @@
+# versionは基本3
+version: '3'
+
+# docker-volumeを設定
+volumes: 
+    db-data:
+
+services: 
+    web:
+        # カレントディレクトリをビルド
+        build: .
+        # portsを指定
+        ports:
+            - '3000:3000'
+        # マウント先を指定
+        volumes: 
+            - '.:/product-register'
+        # 環境変数を設定
+        environment: 
+            - 'DATABASE_PASSWORD=postgres'
+        tty: true
+        stdin_open: true
+        # dbを参照できた場合runする
+        depends_on: 
+            - db
+        # webからdbにアクセス権を付与する
+        links: 
+            - db
+    db:
+        # postgresを使用する
+        image: postgres
+        # 以下の場所にpostgresqlのデータを保管する
+        volumes: 
+            - 'db-data:/var/lib/postgresql/data'
+        environment:
+            - 'POSTGRES_USER=postgres'
+            - 'POSTGRES_PASSWORD=postgres'
