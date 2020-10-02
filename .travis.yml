@@ -1,9 +1,9 @@
-sudoL required
+sudo: required
 
 services: docker
 
 before_install:
-    docker-comopose up --build -docker
+    docker-comopose up --build -d
 
 script:
     - docker-compose exec -env 'RAILS_ENV=test' web rails db:create
